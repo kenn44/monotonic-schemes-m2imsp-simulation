@@ -14,7 +14,8 @@ ycible	=[0;1];
 
 maxiter	= 30;
 c	= ones(1,L-1); %epsilon
-ctil = ones(1,L-1); %epsilon tilde
+ctil = ones(1,L-1)*2; %epsilon tilde
+%*2 car probleme de division par 0 dans mus si c=ctilde
 
 Jtab=zeros(1,maxiter);
 
@@ -23,34 +24,61 @@ psib=zeros(2,L);
 chit=zeros(2,L);
 chib=zeros(2,L);
 
+aj = ones(1,L-1);
+
+%sinon erreur p et y undefined au debut dans psib et chit
+y=zeros(2,L);
+y(:,1)=y0;
+p=zeros(2,L);
+p(:,L)=y(:,L)-ycible;
+
 %============= Main =================
 for iter=1:maxiter
+  %schema implicite, utiliser la methode de la secante?
   %step1
-  c = calculAj(ctil,c,chit,psib,H1,alpha,L,dt);
-  y = calculY(y0,L,H0,H1,dt,c);
-  psib = calculPsib(y,L,H0,dt);
-  chit = calculChit(p,L,H0,dt);
+  
+  psib = calculPsib(y,L,H0,dt); %comment je fais pour l'avaoir a k+1
+  %compute \epsilon_{j}^{k+1}
+  for j=1:L-1
+    %mus1=calculMus(ctil(j),c(j),H1,dt);
+    %aj(:,j) = - (1/alpha)*imag(chit(:,j)'*calculMus(ctil(j),c(j),H1,dt)*psib(:,j));
+    f = @(x)x+(1/alpha)*imag(chit(:,j)'*calculMus(ctil(j),x,H1,dt)*psib(:,j));
+    x0=1;
+    x=fzero(f,x0)
+    %fzero permet de chercher la racine d'un equation non lineaire
+    %x represente c(j)
+  end
+  chit = calculChit(p,L,H0,dt); %k
+  
+  %compute \psi_{j+1}^{k+1} from \psi_{j}^{k+1}
+  y = calculY(y0,L,H0,H1,dt,c); %k+1
+  
+  
+  
+  %c = calculAj(ctil,c,chit,psib,H1,alpha,L,dt); 
+  
+  
   %step2
-  ctil=calculBj(c,ctil,chib,psit,H1,alpha,L,dt);
-  p=calculP(L,ycible,y,H0,H1,c,dt);
-  psit=calculPsit(y,L,H0,dt);
-  chib=calculChib(p,L,H0,dt);
+  %ctil=calculBj(c,ctil,chib,psit,H1,alpha,L,dt);
+  %p=calculP(L,ycible,y,H0,H1,c,dt);
+  %psit=calculPsit(y,L,H0,dt);
+  %chib=calculChib(p,L,H0,dt);
   
-  J=fonctionelle(y0,L,H0,H1,dt,c,ycible,alpha);
-  Jtab(iter)=J;
-	plot(Jtab);
-  xlabel("Number of iteration");
-  ylabel ('{\it J_{\Delta T}(\epsilon)}')
-  legend ("Explicit scheme");
-	pause(.1);
+  %J=fonctionelle(y0,L,H0,H1,dt,c,ycible,alpha);
+  %Jtab(iter)=J;
+	%plot(Jtab);
+  %xlabel("Number of iteration");
+  %ylabel ('{\it J_{\Delta T}(\epsilon)}')
+  %legend ("Implicit scheme");
+	%pause(.1);
   
-	fprintf(2,'Iter=%i|J=%f \n',iter,J)
+	%fprintf(2,'Iter=%i|J=%f \n',iter,J)
 end
 
 end
 
 %============= Functions =================
-%quelle est la bonne fontionnelle 
+%quelle est la bonne fontionnelle ?
 %quel est son gradient?
 %ecrire le test debug dans une fonction
 function J=fonctionelle(y0,L,H0,H1,dt,c,ycible,alpha)

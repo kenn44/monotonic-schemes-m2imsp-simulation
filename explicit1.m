@@ -28,17 +28,17 @@ chib=zeros(2,L);
 %============= Main =================
 for iter=1:maxiter
   %iter
-  %step1
+  %calcul epsilon
   y = calculY(y0,L,H0,H1,dt,c);
-  p=calculP(L,ycible,y,H0,H1,c,dt); %good place to be?
+  p = calculP(L,ycible,y,H0,H1,c,dt); %good place to be? No
   psib = calculPsib(y,L,H0,dt);
   for j=1:L-1
-    delta(j)=alpha/(alpha+dt*real(chit(:,j)'*(H1^2)*psib(:,j))); %H1^2
+    delta(j)=alpha/(alpha+dt*real(chit(:,j)'*(H1^2)*psib(:,j)));
     c(j)=(1-delta(j))*ctil(j)-(delta(j)/alpha)*imag(chit(:,j)'*H1*psib(:,j));
   end
   chit = calculChit(p,L,H0,dt);
-  %step2
   
+  %calcul epsilon tilde
   psit=calculPsit(y,L,H0,dt);
   chib=calculChib(p,L,H0,dt);
   for j=1:L-1
@@ -60,7 +60,7 @@ end
 end
 
 %============= Functions =================
-%quelle est la bonne fontionnelle 
+%quelle est la bonne fontionnelle ?
 %quel est son gradient?
 %ecrire le test debug dans une fonction
 function J=fonctionelle(y0,L,H0,H1,dt,c,ycible,alpha)
