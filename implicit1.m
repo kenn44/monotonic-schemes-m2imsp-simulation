@@ -37,16 +37,21 @@ for iter=1:maxiter
   %schema implicite, utiliser la methode de la secante?
   %step1
   
-  psib = calculPsib(y,L,H0,dt); %comment je fais pour l'avaoir a k+1
+  psib = calculPsib(y,L,H0,dt); %k+1
   %compute \epsilon_{j}^{k+1}
   for j=1:L-1
     %mus1=calculMus(ctil(j),c(j),H1,dt);
     %aj(:,j) = - (1/alpha)*imag(chit(:,j)'*calculMus(ctil(j),c(j),H1,dt)*psib(:,j));
     f = @(x)x+(1/alpha)*imag(chit(:,j)'*calculMus(ctil(j),x,H1,dt)*psib(:,j));
-    x0=1;
+    if (j==1)
+      x0=1;
+    else
+      x0=c(j-1);
+    endif
     x=fzero(f,x0)
-    %fzero permet de chercher la racine d'un equation non lineaire
+    %fzero permet de chercher la racine d'une equation non lineaire
     %x represente c(j)
+    c(j)=x;
   end
   chit = calculChit(p,L,H0,dt); %k
   
