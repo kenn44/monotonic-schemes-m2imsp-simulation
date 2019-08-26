@@ -45,8 +45,8 @@ for iter=1:maxiter
   %step1
     for j=L-1:-1:1
     chib(:,j+1)=expm(-(H0*dt)/(2*i))*p(:,j+1);
-    etha(j)=alpha/(alpha+dt*real(chib(:,j+1).'*(H1^2)*psit(:,j+1)));
-    ctil(j)=(1-etha(j))*c(j)-(etha(j)/alpha)*imag(chib(:,j+1).'*H1*psit(:,j+1));
+    etha(j)=alpha/(alpha+dt*real(chib(:,j+1)'*(H1^2)*psit(:,j+1)));
+    ctil(j)=(1-etha(j))*c(j)-(etha(j)/alpha)*imag(chib(:,j+1)'*H1*psit(:,j+1));
     chit(:,j)=expm(i*H1*ctil(:,j)*dt)*chib(:,j+1);
     p(:,j)=expm(i*H0*dt/2)*chit(:,j);
   end
@@ -56,8 +56,8 @@ for iter=1:maxiter
   %step2
   for j=1:L-1
     psib(:,j)=expm((H0*dt)/(2*i))*y(:,j);
-    delta(j)=alpha/(alpha+dt*real(chit(:,j).'*(H1^2)*psib(:,j)));
-    c(j)=(1-delta(j))*ctil(j)-(delta(j)/alpha)*imag(chit(:,j).'*H1*psib(:,j));
+    delta(j)=alpha/(alpha+dt*real(chit(:,j)'*(H1^2)*psib(:,j)));
+    c(j)=(1-delta(j))*ctil(j)-(delta(j)/alpha)*imag(chit(:,j)'*H1*psib(:,j));
     psit(:,j+1)=expm(-i*H1*c(:,j)*dt)*psib(:,j);
     y(:,j+1)=expm(-i*H0*dt/2)*psit(:,j+1);
   end
@@ -65,7 +65,7 @@ for iter=1:maxiter
 
   
   %J=2-norm(ycible-y(:,L))^2 - alpha * dt * norm(c)^2;
-  J=2*real(ycible.'*y(:,L)) - alpha * dt * norm(c)^2;
+  J=2*real(ycible'*y(:,L)) - alpha * dt * norm(c)^2;
   
   Jtab(iter)=J;
 	plot(Jtab);
