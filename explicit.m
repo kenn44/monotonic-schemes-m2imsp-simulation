@@ -1,4 +1,4 @@
-function implicit
+function explicit
 %============= Variables =================
 T	=10;
 L	=20; %return to 200
@@ -7,6 +7,7 @@ dt	=t(2)-t(1);
 
 H0	=[1 0;0 2];
 H1	=[0 1;1 0];
+
 
 alpha = 10;
 y0 = [1;0];
@@ -44,17 +45,9 @@ for iter=1:maxiter
   %step1
     for j=L-1:-1:1
     chib(:,j+1)=expm(-(H0*dt)/(2*i))*p(:,j+1);
-    %psit(:,j)=expm(-(H0*dt)/(2*i))*y(:,j); %k+1
-    f = @(x)x+(1/alpha)*imag(chib(:,j+1).'*calculMus(c(j),x,H1,dt)*psit(:,j+1));
-    if (j==L-1)
-      x0=ctil(L-1);
-    else
-      x0=ctil(j+1);
-    endif
-    x=fzero(f,x0);
-    ctil(j)=x;
+    etha(j)=alpha/(alpha+dt*real(chib(:,j+1).'*(H1^2)*psit(:,j+1)));
+    ctil(j)=(1-etha(j))*c(j)-(etha(j)/alpha)*imag(chib(:,j+1).'*H1*psit(:,j+1));
     chit(:,j)=expm(i*H1*ctil(:,j)*dt)*chib(:,j+1);
-    
     p(:,j)=expm(i*H0*dt/2)*chit(:,j);
   end
   %ctil
@@ -63,15 +56,8 @@ for iter=1:maxiter
   %step2
   for j=1:L-1
     psib(:,j)=expm((H0*dt)/(2*i))*y(:,j);
-    f = @(x)x+(1/alpha)*imag(chit(:,j).'*calculMus(x,ctil(j),H1,dt)*psib(:,j));
-    if (j==1)
-      x0=c(1);
-    else
-      x0=c(j-1);
-    endif
-    x=fzero(f,x0);
-    c(j)=x;
-
+    delta(j)=alpha/(alpha+dt*real(chit(:,j).'*(H1^2)*psib(:,j)));
+    c(j)=(1-delta(j))*ctil(j)-(delta(j)/alpha)*imag(chit(:,j).'*H1*psib(:,j));
     psit(:,j+1)=expm(-i*H1*c(:,j)*dt)*psib(:,j);
     y(:,j+1)=expm(-i*H0*dt/2)*psit(:,j+1);
   end
@@ -85,7 +71,7 @@ for iter=1:maxiter
 	plot(Jtab);
   xlabel("Number of iteration");
   ylabel ('{\it J_{\Delta T}(\epsilon)}')
-  legend ("Implicit scheme");
+  legend ("Explicit scheme");
 	pause(.1);
   
 	fprintf(2,'Iter=%i|J=%f \n',iter,J)
