@@ -1,7 +1,7 @@
 function explicit
 %============= Variables =================
 T	=10;
-L	=20; %return to 200
+L	=200; %return to 200
 t	=linspace(0,T,L);
 dt	=t(2)-t(1);
 
@@ -68,15 +68,15 @@ for iter=1:maxiter
   J=2*real(ycible'*y(:,L)) - alpha * dt * norm(c)^2;
   
   Jtab(iter)=J;
-	plot(Jtab);
+	plot(Jtab, '--*');
   xlabel("Number of iteration");
   ylabel ('{\it J_{\Delta T}(\epsilon)}')
   legend ("Explicit scheme");
-	pause(.1);
+	%pause(.1);
   
 	fprintf(2,'Iter=%i|J=%f \n',iter,J)
 end
-fprintf(1,'y(T)=%f \n',y(:,L))
+%fprintf(1,'y(T)=%f \n',y(:,L))
 
 end
 

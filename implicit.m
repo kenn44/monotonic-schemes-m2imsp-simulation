@@ -44,7 +44,6 @@ for iter=1:maxiter
   %step1
     for j=L-1:-1:1
     chib(:,j+1)=expm(-(H0*dt)/(2*i))*p(:,j+1);
-    %psit(:,j)=expm(-(H0*dt)/(2*i))*y(:,j); %k+1
     f = @(x)x+(1/alpha)*imag(chib(:,j+1).'*calculMus(c(j),x,H1,dt)*psit(:,j+1));
     if (j==L-1)
       x0=ctil(L-1);
@@ -82,15 +81,15 @@ for iter=1:maxiter
   J=2*real(ycible.'*y(:,L)) - alpha * dt * norm(c)^2;
   
   Jtab(iter)=J;
-	plot(Jtab);
+	plot(Jtab, '--*');
   xlabel("Number of iteration");
   ylabel ('{\it J_{\Delta T}(\epsilon)}')
   legend ("Implicit scheme");
-	pause(.1);
+	%pause(.1);
   
 	fprintf(2,'Iter=%i|J=%f \n',iter,J)
 end
-fprintf(1,'y(T)=%f \n',y(:,L))
+%fprintf(1,'y(T)=%f \n',y(:,L))
 
 end
 
