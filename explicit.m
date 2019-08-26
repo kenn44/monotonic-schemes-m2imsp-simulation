@@ -52,7 +52,6 @@ for iter=1:maxiter
   end
   %ctil
   
-  
   %step2
   for j=1:L-1
     psib(:,j)=expm((H0*dt)/(2*i))*y(:,j);
@@ -63,16 +62,27 @@ for iter=1:maxiter
   end
   %c
 
-  
   %J=2-norm(ycible-y(:,L))^2 - alpha * dt * norm(c)^2;
   J=2*real(ycible'*y(:,L)) - alpha * dt * norm(c)^2;
   
   Jtab(iter)=J;
-	plot(Jtab, '--*');
-  xlabel("Number of iteration");
-  ylabel ('{\it J_{\Delta T}(\epsilon)}')
-  legend ("Explicit scheme");
-	%pause(.1);
+  
+	%plot(Jtab, '--*');
+  %xlabel("Number of iteration");
+  %ylabel ('{\it J_{\Delta T}(\epsilon)}')
+  %legend ("Explicit scheme");
+  
+  plot(t(1:end-1),c)
+  xlabel("Temps de contrôle");
+  ylabel ('Contrôle {\it \epsilon (t)}')
+  legend ("Champ de contrôle obtenu");
+  
+  %plot3(t,y(1,:),y(2,:))
+  %xlabel("Temps");
+  %ylabel ('{\it \psi (t)}')
+  %legend ("Fonction d'onde");
+  
+	pause(.1);
   
 	fprintf(2,'Iter=%i|J=%f \n',iter,J)
 end
