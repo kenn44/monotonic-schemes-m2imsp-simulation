@@ -1,38 +1,45 @@
-function explicit
+function explicitdim10
 %============= Variables =================
+dim=10;
 T	=10;
 L	=200; %return to 200
 t	=linspace(0,T,L);
 dt	=t(2)-t(1);
 
-H0	=[1 0;0 2];
-H1	=[0 1;1 0];
-
+%H0	=[1 0;0 2];
+%matrice symetrique random
+H0r=rand(dim);
+H0=H0r+H0r';
+%H1	=[0 1;1 0];
+%0 sur la diagonale, 1 partout ailleurs
+H1	=ones(dim,dim)-diag(ones(1,dim));
 
 alpha = 10;
-y0 = [1;0];
-ycible	=[0;1];
+%y0 = [1;0];
+y0 = [1;0;0;0;0;0;0;0;0;0];
+%ycible	=[0;1];
+ycible	=[0;0;0;0;0;0;0;0;0;1];
 
 maxiter	= 10; %return to 30 after
 c	= ones(1,L-1)*0.3; %eps
 ctil = ones(1,L-1)*0.5; %eps tilde
 %division by zero in mus if c=ctilde
 
-y=zeros(2,L);
+y=zeros(dim,L);
 y(:,1)=y0;
-p=zeros(2,L);
+p=zeros(dim,L);
 p(:,L)=ycible;
 
-psit=zeros(2,L);
+psit=zeros(dim,L);
 psit(:,1)=expm(-(H0*dt)/(2*i))*y(:,1); %initial value
 
-psib=zeros(2,L);
+psib=zeros(dim,L);
 psib(:,1)=expm((H0*dt)/(2*i))*y(:,1);
 
-chit=zeros(2,L);
+chit=zeros(dim,L);
 chit(:,L)=expm((H0*dt)/(2*i))*p(:,L); %end value
 
-chib=zeros(2,L);
+chib=zeros(dim,L);
 chib(:,L)=expm(-(H0*dt)/(2*i))*p(:,L);
 
 Jtab=zeros(1,maxiter);
@@ -72,19 +79,19 @@ for iter=1:maxiter
   %ylabel ('{\it J_{\Delta T}(\epsilon)}')
   %legend ("Explicit scheme");
   
-  plot(t(1:end-1),c)
-  xlabel("Temps de contrôle");
-  ylabel ('Contrôle {\it \epsilon (t)}')
-  legend ("Champ de contrôle obtenu");
+  %plot(t(1:end-1),c)
+  %xlabel("Temps de contrôle");
+  %ylabel ('Contrôle {\it \epsilon (t)}')
+  %legend ("Champ de contrôle obtenu");
   
-  %plot3(t,y(1,:),y(2,:))
+  %plot3(y)
   %xlabel("Temps");
   %ylabel ('{\it \psi (t)}')
   %legend ("Fonction d'onde");
   
 	pause(.1);
   
-	fprintf(2,'Iter=%i|J=%f \n',iter,J)
+	%fprintf(2,'Iter=%i|J=%f \n',iter,J)
 end
 %fprintf(1,'y(T)=%f \n',y(:,L))
 %cputime ()

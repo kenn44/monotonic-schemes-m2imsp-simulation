@@ -20,7 +20,7 @@ ctil = ones(1,L-1)*0.5; %eps tilde
 y=zeros(2,L);
 y(:,1)=y0;
 p=zeros(2,L);
-p(:,L)=ycible;%to edit?
+p(:,L)=ycible;
 
 psit=zeros(2,L);
 psit(:,1)=expm(-(H0*dt)/(2*i))*y(:,1); %initial value
@@ -84,26 +84,27 @@ for iter=1:maxiter
   
   Jtab(iter)=J;
 	
-  %plot(Jtab, '--*');
-  %xlabel("Number of iteration");
-  %ylabel ('{\it J_{\Delta T}(\epsilon)}')
-  %legend ("Implicit scheme");
+  plot(Jtab, '--*');
+  xlabel("Number of iteration");
+  ylabel ('{\it J_{\Delta T}(\epsilon)}')
+  legend ("Implicit scheme");
   
   %plot(t(1:end-1),c)
   %xlabel("Temps de contrôle");
   %ylabel ('Contrôle {\it \epsilon (t)}')
   %legend ("Champ de contrôle obtenu");
   
-  plot3(t,y(1,:),y(2,:))
-  xlabel("Temps");
-  ylabel ('{\it \psi (t)}')
-  legend ("Fonction d'onde");
+  %plot3(t,y(1,:),y(2,:))
+  %xlabel("Temps");
+  %ylabel ('{\it \psi (t)}')
+  %legend ("Fonction d'onde");
   
 	pause(.1);
   
 	fprintf(2,'Iter=%i|J=%f \n',iter,J)
 end
 %fprintf(1,'y(T)=%f \n',y(:,L))
+%cputime ()
 
 end
 
