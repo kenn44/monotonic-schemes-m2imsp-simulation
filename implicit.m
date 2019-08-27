@@ -85,9 +85,9 @@ for iter=1:maxiter
   Jtab(iter)=J;
 	
   plot(Jtab, '--*');
-  xlabel("Number of iteration");
+  xlabel("Nombre d'iterations");
   ylabel ('{\it J_{\Delta T}(\epsilon)}')
-  legend ("Implicit scheme");
+  legend ("Schema implicite");
   
   %plot(t(1:end-1),c)
   %xlabel("Temps de contrôle");

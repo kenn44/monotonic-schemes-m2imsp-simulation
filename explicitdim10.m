@@ -74,10 +74,10 @@ for iter=1:maxiter
   
   Jtab(iter)=J;
   
-	%plot(Jtab, '--*');
-  %xlabel("Number of iteration");
-  %ylabel ('{\it J_{\Delta T}(\epsilon)}')
-  %legend ("Explicit scheme");
+	plot(Jtab, '--*');
+  xlabel("Nombre d'iterations");
+  ylabel ('{\it J_{\Delta T}(\epsilon)}')
+  legend ("Schema explicite");
   
   %plot(t(1:end-1),c)
   %xlabel("Temps de contrôle");
